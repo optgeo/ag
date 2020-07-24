@@ -1,0 +1,49 @@
+{
+  "center": [
+    130.550537,
+    32.203505
+  ],
+  "layers": [
+    {
+      "id": "seamlessphoto",
+      "source": "i",
+      "type": "raster"
+    },
+    {
+      "id": "farmland",
+      "paint": {
+        "fill-color": [
+          "rgb",
+          174,
+          213,
+          129
+        ],
+        "fill-opacity": 0.5
+      },
+      "source": "v",
+      "source-layer": "farmland",
+      "type": "fill"
+    }
+  ],
+  "site_root": "http://localhost:9966",
+  "sources": {
+    "i": {
+      "attribution": "国土地理院",
+      "maxzoom": 18,
+      "tiles": [
+        "https://maps.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"
+      ],
+      "type": "raster"
+    },
+    "v": {
+      "attribution": "筆ポリゴンデータ（農林水産省）を国連ベクトルタイルツールキットで加工して作成",
+      "maxzoom": 14,
+      "tiles": [
+        "http://localhost:9966/zxy/{z}/{x}/{y}.pbf"
+      ],
+      "type": "vector"
+    }
+  },
+  "version": 8,
+  "zoom": 12
+}
