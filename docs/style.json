@@ -25,7 +25,7 @@
       "type": "fill"
     }
   ],
-  "site_root": "http://localhost:9966",
+  "site_root": "https://optgeo.github.io/ag-tiles",
   "sources": {
     "i": {
       "attribution": "国土地理院",
@@ -37,9 +37,9 @@
     },
     "v": {
       "attribution": "筆ポリゴンデータ（農林水産省）を国連ベクトルタイルツールキットで加工して作成",
-      "maxzoom": 14,
+      "maxzoom": 13,
       "tiles": [
-        "http://localhost:9966/zxy/{z}/{x}/{y}.pbf"
+        "https://optgeo.github.io/ag-tiles/zxy/{z}/{x}/{y}.pbf"
       ],
       "type": "vector"
     }

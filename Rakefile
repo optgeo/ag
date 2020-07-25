@@ -19,24 +19,29 @@ end
 
 desc 'produce tiles'
 task :tiles do
+  MAXZOOM = 13
   cmd = []
   Find.find('geojson') {|path|
     next unless /\.geojson$/.match path
     next if File.size(path) == 0
     cmd << "(ogr2ogr -f GeoJSONSeq /vsistdout/ #{path} | " +
-      "MINZOOM=2 MAXZOOM=10 ruby filter.rb)"
+      "MINZOOM=2 MAXZOOM=12 ruby filter.rb)"
   }
+  count = 0
   Find.find('src') {|path|
     next unless /\.shp$/.match path
-    #cmd << "(ogr2ogr -oo ENCODING=CP932 -f GeoJSONSeq " +
-    #  "/vsistdout/ #{path} | " +
-    #  "MINZOOM=11 MAXZOOM=14 ruby filter.rb)"
+    cmd << "(ogr2ogr -oo ENCODING=CP932 -f GeoJSONSeq " +
+      "/vsistdout/ #{path} | " +
+      "MINZOOM=13 MAXZOOM=#{MAXZOOM} ruby filter.rb)"
+    count += 1
+    #break if count == 230
   }
   cmd = "(#{cmd.join('; ')}) | " +
     "tippecanoe -o tiles.mbtiles -f " +
-    "--maximum-zoom=14 --base-zoom=14 --hilbert " +
+    "--maximum-zoom=#{MAXZOOM} --base-zoom=#{MAXZOOM} --hilbert " +
     "--drop-polygons -as -ad -an -aN -aD -aS "
-  sh cmd
+  File.write("a.sh", cmd)
+  sh "sh ./a.sh"
   sh "tile-join --force --no-tile-compression " +
     "--output-to-directory=docs/zxy --no-tile-size-limit tiles.mbtiles"
 end
