@@ -2,13 +2,13 @@ require 'find'
 
 desc 'disolve polygons'
 task :dissolve do
-  D = 10   # buffer width
-  S = 2.5 # simplification tolerance
+  D = 12.5   # buffer width
+  S = 5 # simplification tolerance
   Find.find('src') {|path|
     next unless /shp$/.match path
     t = File.basename(path, '.shp')
     cmd = "ogr2ogr -oo ENCODING=CP932 -lco RFC7946=YES -f GeoJSON "
-    cmd += "-simplify 5 geojson/#{t}.geojson "
+    cmd += "-simplify #{S} geojson/#{t}.geojson "
     cmd += "-dialect sqlite -sql "
     cmd += "'SELECT ST_Buffer(ST_Buffer(ST_Union(Geometry), #{D}), -#{D}) "
     cmd += "from \"#{t}\"' "
@@ -39,7 +39,7 @@ task :tiles do
   cmd = "(#{cmd.join('; ')}) | " +
     "tippecanoe -o tiles.mbtiles -f " +
     "--maximum-zoom=#{MAXZOOM} --base-zoom=#{MAXZOOM} --hilbert " +
-    "--drop-polygons -as -ad -an -aN -aD -aS "
+    "--drop-polygons --simplification=10 -as -ad -an -aN -aD -aS "
   File.write("a.sh", cmd)
   sh "sh ./a.sh"
   sh "tile-join --force --no-tile-compression " +
