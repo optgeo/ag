@@ -20,6 +20,7 @@ end
 desc 'produce tiles'
 task :tiles do
   MAXZOOM = 13
+  SIMPLIFICATION = 1
   cmd = []
   Find.find('geojson') {|path|
     next unless /\.geojson$/.match path
@@ -39,11 +40,17 @@ task :tiles do
   cmd = "(#{cmd.join('; ')}) | " +
     "tippecanoe -o tiles.mbtiles -f " +
     "--maximum-zoom=#{MAXZOOM} --base-zoom=#{MAXZOOM} --hilbert " +
-    "--drop-polygons --simplification=10 -as -ad -an -aN -aD -aS "
+    "--drop-polygons --simplification=#{SIMPLIFICATION} -as -ad -an -aN -aD -aS "
   File.write("a.sh", cmd)
   sh "sh ./a.sh"
   sh "tile-join --force --no-tile-compression " +
     "--output-to-directory=docs/zxy --no-tile-size-limit tiles.mbtiles"
+end
+
+desc 'extract to ag-tiles'
+task :agtiles do
+  sh "tile-join --force --no-tile-compression " +
+    "--output-to-directory=../ag-tiles/docs/zxy --no-tile-size-limit tiles.mbtiles"
 end
 
 desc 'create style.json'
